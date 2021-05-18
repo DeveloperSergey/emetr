@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -13,15 +16,19 @@ import android.widget.Toast;
 public class ScaleView extends View implements View.OnTouchListener {
 
     private Context context;
+    private int screenWidth, screenHeight;
     private Paint mPaint = new Paint();
 
     private int x0;
     private int y0;
     private int sweepAngle = 0;
+    private int lineLength = 0;
 
-    public ScaleView(Context context) {
+    public ScaleView(Context context, Point displaySize) {
         super(context);
         this.context = context;
+        screenWidth = displaySize.x;
+        screenHeight = displaySize.y;
         setOnTouchListener(this);
 
         /*this.setOnTouchListener(new SwipeListener(context){
@@ -51,17 +58,46 @@ public class ScaleView extends View implements View.OnTouchListener {
         mPaint.setColor(Color.GRAY);
         canvas.drawPaint(mPaint);
 
-        mPaint.setColor(Color.WHITE);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(3);
+
         final RectF oval = new RectF();
         float radius = 100f;
         float center_x, center_y;
-        center_x = 240;
-        center_y = 220;
+        center_x = (int)(screenWidth / 2);
+        center_y = (int)(screenHeight / 2);
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
-        canvas.drawArc(oval, 90, sweepAngle, true, mPaint); // рисуем пакмана
+
+        // Background 0
+        mPaint.setStyle(Paint.Style.FILL);
+        mPaint.setStrokeWidth(15);
+        mPaint.setColor(Color.DKGRAY);
+        canvas.drawCircle(center_x, center_y, radius, mPaint);
+
+        // Background 1
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(15);
+        mPaint.setColor(Color.WHITE);
+        canvas.drawCircle(center_x, center_y, radius, mPaint);
+
+        // Value
+        mPaint.setStrokeWidth(10);
+        mPaint.setColor(Color.GREEN);
+        canvas.drawArc(oval, 90, sweepAngle, false, mPaint); // рисуем пакмана
+
+        // Digits
+        mPaint.setStrokeWidth(1);
+        mPaint.setTextSize(40f);
+        mPaint.setTextAlign(Paint.Align.CENTER);
+        mPaint.setColor(Color.WHITE);
+        final Rect textBounds = new Rect(); //don't new this up in a draw method
+        mPaint.getTextBounds(String.valueOf(sweepAngle), 0, String.valueOf(sweepAngle).length(), textBounds);
+        canvas.drawText(String.valueOf(sweepAngle), center_x, center_y - textBounds.exactCenterY(), mPaint);
+
+        // Line
+        mPaint.setStrokeWidth(10);
+        mPaint.setColor(Color.RED);
+        canvas.drawLine(screenWidth, screenHeight-lineLength, screenWidth, screenHeight, mPaint);
+        Log.d("ScaleView", String.valueOf(screenHeight-lineLength));
     }
 
     @Override
@@ -83,15 +119,24 @@ public class ScaleView extends View implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_MOVE:
                 // Move
-                int delta = x - x0;
-                if(Math.abs(delta) > 20){
+                int deltaX = x - x0;
+                int deltaY = y - y0;
+                if(Math.abs(deltaX) > 20){
                     x0 = x;
-                    if(delta > 0) sweepAngle++;
+                    if(deltaX > 0) sweepAngle++;
                     else sweepAngle--;
+
                     if(sweepAngle < 0) sweepAngle = 0;
                     if(sweepAngle > 360) sweepAngle = 360;
-                    //Toast.makeText(context, String.valueOf(delta), Toast.LENGTH_LONG).show();
-                    Log.d("ScaleView", String.valueOf(delta > 0));
+                    this.invalidate();
+                }
+                if(Math.abs(deltaY) > 50){
+                    y0 = y;
+                    if(deltaY > 0) lineLength -= 10;
+                    else lineLength += 10;
+
+                    if(lineLength < 0) lineLength = 0;
+                    if(lineLength > screenHeight) lineLength = screenHeight;
                     this.invalidate();
                 }
                 break;
