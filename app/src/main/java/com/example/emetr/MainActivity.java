@@ -17,11 +17,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
-        Display display = getWindowManager().getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-
-        ScaleView scaleView = new ScaleView(getApplicationContext(), size);
+        ScaleView scaleView = new ScaleView(getApplicationContext());
         setContentView(scaleView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getSupportActionBar().hide();

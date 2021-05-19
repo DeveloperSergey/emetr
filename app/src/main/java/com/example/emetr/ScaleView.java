@@ -16,7 +16,6 @@ import android.widget.Toast;
 public class ScaleView extends View implements View.OnTouchListener {
 
     private Context context;
-    private int screenWidth, screenHeight;
     private Paint mPaint = new Paint();
 
     private int x0;
@@ -24,11 +23,9 @@ public class ScaleView extends View implements View.OnTouchListener {
     private int sweepAngle = 0;
     private int lineLength = 0;
 
-    public ScaleView(Context context, Point displaySize) {
+    public ScaleView(Context context) {
         super(context);
         this.context = context;
-        screenWidth = displaySize.x;
-        screenHeight = displaySize.y;
         setOnTouchListener(this);
 
         /*this.setOnTouchListener(new SwipeListener(context){
@@ -51,6 +48,9 @@ public class ScaleView extends View implements View.OnTouchListener {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        int width = this.getWidth();
+        int height = this.getHeight();
+
         // Fill style
         mPaint.setStyle(Paint.Style.FILL);
 
@@ -62,10 +62,16 @@ public class ScaleView extends View implements View.OnTouchListener {
         final RectF oval = new RectF();
         float radius = 100f;
         float center_x, center_y;
-        center_x = (int)(screenWidth / 2);
-        center_y = (int)(screenHeight / 2);
+        center_x = (int)(width / 2);
+        center_y = (int)(height / 2);
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
+
+        // Rectangle
+        mPaint.setStyle(Paint.Style.STROKE);
+        mPaint.setStrokeWidth(5);
+        mPaint.setColor(Color.GREEN);
+        canvas.drawRect(0, 0, width, height, mPaint);
 
         // Background 0
         mPaint.setStyle(Paint.Style.FILL);
@@ -96,12 +102,15 @@ public class ScaleView extends View implements View.OnTouchListener {
         // Line
         mPaint.setStrokeWidth(10);
         mPaint.setColor(Color.RED);
-        canvas.drawLine(screenWidth, screenHeight-lineLength, screenWidth, screenHeight, mPaint);
-        Log.d("ScaleView", String.valueOf(screenHeight-lineLength));
+        canvas.drawLine(width, height-lineLength, width, height, mPaint);
+        Log.d("ScaleView", String.valueOf(height-lineLength));
     }
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+
+        int width = this.getWidth();
+        int height = this.getHeight();
 
         final int x = (int) event.getX();
         final int y = (int) event.getY();
@@ -136,7 +145,7 @@ public class ScaleView extends View implements View.OnTouchListener {
                     else lineLength += 10;
 
                     if(lineLength < 0) lineLength = 0;
-                    if(lineLength > screenHeight) lineLength = screenHeight;
+                    if(lineLength > height) lineLength = height;
                     this.invalidate();
                 }
                 break;
