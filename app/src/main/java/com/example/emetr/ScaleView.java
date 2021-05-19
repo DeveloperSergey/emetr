@@ -17,7 +17,12 @@ public class ScaleView extends View implements View.OnTouchListener {
 
     private Context context;
     private Paint mPaint = new Paint();
+    private Arrow arrow = new Arrow();
+    private Gain gain = new Gain();
+    private  ToneArm toneArm = new ToneArm();
+    private Scale scale = new Scale();
 
+    private final int GAIN_NUM = 8;
     private int x0;
     private int y0;
     private int sweepAngle = 0;
@@ -47,63 +52,45 @@ public class ScaleView extends View implements View.OnTouchListener {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
+        final int MARGIN = 50;
         int width = this.getWidth();
         int height = this.getHeight();
 
-        // Fill style
-        mPaint.setStyle(Paint.Style.FILL);
-
         // Fill canvas
+        mPaint.setStyle(Paint.Style.FILL);
         mPaint.setColor(Color.GRAY);
         canvas.drawPaint(mPaint);
 
-
-        final RectF oval = new RectF();
-        float radius = 100f;
-        float center_x, center_y;
-        center_x = (int)(width / 2);
-        center_y = (int)(height / 2);
-        oval.set(center_x - radius, center_y - radius, center_x + radius,
-                center_y + radius);
-
-        // Rectangle
+        // Rectangle - Area
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(5);
         mPaint.setColor(Color.GREEN);
         canvas.drawRect(0, 0, width, height, mPaint);
 
-        // Background 0
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setStrokeWidth(15);
-        mPaint.setColor(Color.DKGRAY);
-        canvas.drawCircle(center_x, center_y, radius, mPaint);
 
-        // Background 1
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(15);
-        mPaint.setColor(Color.WHITE);
-        canvas.drawCircle(center_x, center_y, radius, mPaint);
+        //------------------------------------------------------------------------------------------
+        // Tone arm
+        toneArm.draw(canvas, width, height, sweepAngle);
+        //------------------------------------------------------------------------------------------
 
-        // Value
-        mPaint.setStrokeWidth(10);
-        mPaint.setColor(Color.GREEN);
-        canvas.drawArc(oval, 90, sweepAngle, false, mPaint); // рисуем пакмана
 
-        // Digits
-        mPaint.setStrokeWidth(1);
-        mPaint.setTextSize(40f);
-        mPaint.setTextAlign(Paint.Align.CENTER);
-        mPaint.setColor(Color.WHITE);
-        final Rect textBounds = new Rect(); //don't new this up in a draw method
-        mPaint.getTextBounds(String.valueOf(sweepAngle), 0, String.valueOf(sweepAngle).length(), textBounds);
-        canvas.drawText(String.valueOf(sweepAngle), center_x, center_y - textBounds.exactCenterY(), mPaint);
+        //------------------------------------------------------------------------------------------
+        // Sensitive
+        gain.draw(canvas, width, height, lineLength);
+        //------------------------------------------------------------------------------------------
 
-        // Line
-        mPaint.setStrokeWidth(10);
-        mPaint.setColor(Color.RED);
-        canvas.drawLine(width, height-lineLength, width, height, mPaint);
-        Log.d("ScaleView", String.valueOf(height-lineLength));
+
+        //------------------------------------------------------------------------------------------
+        // Scale
+        scale.draw(canvas, width, height);
+        //------------------------------------------------------------------------------------------
+
+
+        //------------------------------------------------------------------------------------------
+        // Arrow
+        int angle = 45;
+        arrow.draw(canvas, width, height, angle);
+        //------------------------------------------------------------------------------------------
     }
 
     @Override
@@ -130,22 +117,22 @@ public class ScaleView extends View implements View.OnTouchListener {
                 // Move
                 int deltaX = x - x0;
                 int deltaY = y - y0;
-                if(Math.abs(deltaX) > 20){
+                if((Math.abs(deltaY) > 100) && (x0 < width / 5)){
+                    y0 = y;
+                    if(deltaY > 0) lineLength --;
+                    else lineLength ++;
+
+                    if(lineLength < 0) lineLength = 0;
+                    if(lineLength >= GAIN_NUM) lineLength = GAIN_NUM - 1;
+                    this.invalidate();
+                }
+                else if(Math.abs(deltaX) > 20){
                     x0 = x;
                     if(deltaX > 0) sweepAngle++;
                     else sweepAngle--;
 
                     if(sweepAngle < 0) sweepAngle = 0;
                     if(sweepAngle > 360) sweepAngle = 360;
-                    this.invalidate();
-                }
-                if(Math.abs(deltaY) > 50){
-                    y0 = y;
-                    if(deltaY > 0) lineLength -= 10;
-                    else lineLength += 10;
-
-                    if(lineLength < 0) lineLength = 0;
-                    if(lineLength > height) lineLength = height;
                     this.invalidate();
                 }
                 break;
