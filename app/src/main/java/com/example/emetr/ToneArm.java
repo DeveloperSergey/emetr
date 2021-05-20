@@ -6,10 +6,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-public class ToneArm {
-
-    private Paint paint = new Paint();
-    private final int MARGIN = 50;
+public class ToneArm extends BasicView{
 
     public void draw(Canvas canvas, int width, int height, int value){
         final RectF oval = new RectF();
@@ -20,26 +17,27 @@ public class ToneArm {
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
 
-        // Background 0
+        /*/ Background 0
         paint.setStyle(Paint.Style.FILL);
         paint.setStrokeWidth(15);
         paint.setColor(Color.DKGRAY);
-        canvas.drawCircle(center_x, center_y, radius, paint);
+        canvas.drawCircle(center_x, center_y, radius, paint);*/
 
         // Background 1
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(15);
         paint.setColor(Color.WHITE);
-        canvas.drawCircle(center_x, center_y, radius, paint);
+        //canvas.drawCircle(center_x, center_y, radius, paint);
+        canvas.drawArc(oval, 135, 270, false, paint); // рисуем пакмана
 
         // Value
         paint.setStrokeWidth(10);
         paint.setColor(Color.GREEN);
-        canvas.drawArc(oval, 90, value, false, paint); // рисуем пакмана
+        canvas.drawArc(oval, 135, value, false, paint); // рисуем пакмана
 
         // Digits
         paint.setStrokeWidth(1);
-        paint.setTextSize(40f);
+        paint.setTextSize(70f);
         paint.setTextAlign(Paint.Align.CENTER);
         paint.setColor(Color.WHITE);
         final Rect textBounds = new Rect(); //don't new this up in a draw method

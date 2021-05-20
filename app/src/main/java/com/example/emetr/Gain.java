@@ -6,11 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
-public class Gain {
+public class Gain extends BasicView{
 
-    private Paint paint = new Paint();
     private final int GAIN_NUM = 8;
-
     final int gain[] = { 1,2,4,8,16,32,64,128 };    // 8
     int bg_width = 15;
     int val_width = 10;

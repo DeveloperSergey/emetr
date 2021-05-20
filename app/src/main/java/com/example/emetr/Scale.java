@@ -5,10 +5,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 
-public class Scale {
-
-    private Paint paint = new Paint();
-    private final int MARGIN = 50;
+public class Scale extends BasicView{
 
     public void  draw(Canvas canvas, int width, int height){
 

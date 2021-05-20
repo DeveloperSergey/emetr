@@ -4,23 +4,19 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
 public class ScaleView extends View implements View.OnTouchListener {
 
-    private Context context;
-    private Paint mPaint = new Paint();
-    private Arrow arrow = new Arrow();
-    private Gain gain = new Gain();
-    private  ToneArm toneArm = new ToneArm();
-    private Scale scale = new Scale();
+    final private Context context;
+    final private Paint mPaint = new Paint();
+    final private Arrow arrow = new Arrow();
+    final private Gain gain = new Gain();
+    final private  ToneArm toneArm = new ToneArm();
+    final private Scale scale = new Scale();
+    final private ScaleParam scaleParam = new ScaleParam();
 
     private final int GAIN_NUM = 8;
     private int x0;
@@ -28,10 +24,14 @@ public class ScaleView extends View implements View.OnTouchListener {
     private int sweepAngle = 0;
     private int lineLength = 0;
 
+    private boolean single = true;
+
     public ScaleView(Context context) {
         super(context);
         this.context = context;
         setOnTouchListener(this);
+
+        Log.d("ScaleView", "w: " + String.valueOf(getWidth()));
 
         /*this.setOnTouchListener(new SwipeListener(context){
             public void onSwipeTop() {
@@ -55,6 +55,15 @@ public class ScaleView extends View implements View.OnTouchListener {
         final int MARGIN = 50;
         int width = this.getWidth();
         int height = this.getHeight();
+
+        if(single){
+            single = false;
+            scaleParam.setParams(width, height);
+            arrow.setScaleParam(scaleParam);
+            gain.setScaleParam(scaleParam);
+            scale.setScaleParam(scaleParam);
+            toneArm.setScaleParam(scaleParam);
+        }
 
         // Fill canvas
         mPaint.setStyle(Paint.Style.FILL);
@@ -88,8 +97,7 @@ public class ScaleView extends View implements View.OnTouchListener {
 
         //------------------------------------------------------------------------------------------
         // Arrow
-        int angle = 45;
-        arrow.draw(canvas, width, height, angle);
+        arrow.draw(canvas, width, height, sweepAngle);
         //------------------------------------------------------------------------------------------
     }
 
@@ -132,7 +140,7 @@ public class ScaleView extends View implements View.OnTouchListener {
                     else sweepAngle--;
 
                     if(sweepAngle < 0) sweepAngle = 0;
-                    if(sweepAngle > 360) sweepAngle = 360;
+                    if(sweepAngle > 270) sweepAngle = 270;
                     this.invalidate();
                 }
                 break;
