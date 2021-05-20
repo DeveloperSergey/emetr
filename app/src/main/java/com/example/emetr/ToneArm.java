@@ -8,12 +8,12 @@ import android.graphics.RectF;
 
 public class ToneArm extends BasicView{
 
-    public void draw(Canvas canvas, int width, int height, int value){
+    public void draw(Canvas canvas, int value){
         final RectF oval = new RectF();
         float radius = 100f;
         float center_x, center_y;
         center_x = (int)(0 + radius + MARGIN);
-        center_y = (int)(height - radius - MARGIN);
+        center_y = (int)(screenParam.height - radius - MARGIN);
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
 

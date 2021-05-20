@@ -8,15 +8,16 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class ScaleView extends View implements View.OnTouchListener {
+public class ScreenView extends View implements View.OnTouchListener {
 
     final private Context context;
+    final private Debug debug = new Debug();
     final private Paint mPaint = new Paint();
     final private Arrow arrow = new Arrow();
     final private Gain gain = new Gain();
-    final private  ToneArm toneArm = new ToneArm();
+    final private ToneArm toneArm = new ToneArm();
     final private Scale scale = new Scale();
-    final private ScaleParam scaleParam = new ScaleParam();
+    final private ScreenParam screenParam = new ScreenParam();
 
     private final int GAIN_NUM = 8;
     private int x0;
@@ -26,7 +27,7 @@ public class ScaleView extends View implements View.OnTouchListener {
 
     private boolean single = true;
 
-    public ScaleView(Context context) {
+    public ScreenView(Context context) {
         super(context);
         this.context = context;
         setOnTouchListener(this);
@@ -51,6 +52,10 @@ public class ScaleView extends View implements View.OnTouchListener {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
+        long time[] = { 0, 0 };
+        time[0] = System.currentTimeMillis();
+
         super.onDraw(canvas);
         final int MARGIN = 50;
         int width = this.getWidth();
@@ -58,11 +63,12 @@ public class ScaleView extends View implements View.OnTouchListener {
 
         if(single){
             single = false;
-            scaleParam.setParams(width, height);
-            arrow.setScaleParam(scaleParam);
-            gain.setScaleParam(scaleParam);
-            scale.setScaleParam(scaleParam);
-            toneArm.setScaleParam(scaleParam);
+            screenParam.setParams(width, height);
+            debug.setScreenParam(screenParam);
+            arrow.setScreenParam(screenParam);
+            gain.setScreenParam(screenParam);
+            scale.setScreenParam(screenParam);
+            toneArm.setScreenParam(screenParam);
         }
 
         // Fill canvas
@@ -76,29 +82,17 @@ public class ScaleView extends View implements View.OnTouchListener {
         mPaint.setColor(Color.GREEN);
         canvas.drawRect(0, 0, width, height, mPaint);
 
-
-        //------------------------------------------------------------------------------------------
-        // Tone arm
-        toneArm.draw(canvas, width, height, sweepAngle);
-        //------------------------------------------------------------------------------------------
-
-
-        //------------------------------------------------------------------------------------------
-        // Sensitive
-        gain.draw(canvas, width, height, lineLength);
-        //------------------------------------------------------------------------------------------
+        // Views
+        scale.draw(canvas);
+        toneArm.draw(canvas, sweepAngle);
+        gain.draw(canvas, lineLength);
+        arrow.draw(canvas, sweepAngle);
+        debug.draw(canvas);
 
 
-        //------------------------------------------------------------------------------------------
-        // Scale
-        scale.draw(canvas, width, height);
-        //------------------------------------------------------------------------------------------
-
-
-        //------------------------------------------------------------------------------------------
-        // Arrow
-        arrow.draw(canvas, width, height, sweepAngle);
-        //------------------------------------------------------------------------------------------
+        time[1] = System.currentTimeMillis();
+        Log.d("ScaleView", "Draw time [ms]: " + String.valueOf(time[1] - time[0]));
+        debug.setTime((int)(time[1] - time[0]));
     }
 
     @Override

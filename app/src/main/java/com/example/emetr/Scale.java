@@ -7,18 +7,36 @@ import android.graphics.RectF;
 
 public class Scale extends BasicView{
 
-    public void  draw(Canvas canvas, int width, int height){
+    public void draw(Canvas canvas){
 
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(5);
         paint.setColor(Color.DKGRAY);
 
-        int radius = width/2 - MARGIN;
-        int center_x = (int)(width/2);
-        int center_y = (int)(height/2) + radius/2;
+        int radius = screenParam.height;
+        int center_x = (int)(screenParam.width/2);
+        int center_y = (int)(screenParam.height);
         final RectF oval = new RectF();
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
-        canvas.drawArc(oval, 225, 90, false, paint); // рисуем пакмана
+
+        int startAngle = 180 + screenParam.MIN_ANGLE;
+        int angle = 180 - (2 * screenParam.MIN_ANGLE);
+
+        paint.setStrokeWidth(50);
+        paint.setColor(Color.DKGRAY);
+        canvas.drawArc(oval, startAngle, angle, false, paint);
+
+        paint.setStrokeWidth(10);
+        paint.setColor(Color.GRAY);
+        canvas.drawArc(oval, startAngle, angle, false, paint);
+
+        paint.setStrokeWidth(1);
+        paint.setColor(Color.LTGRAY);
+        canvas.drawArc(oval, startAngle, angle, false, paint);
+    }
+
+    private void drawSector(Canvas canvas, int startAngle, int stopAngle){
+
     }
 }
