@@ -21,19 +21,20 @@ public class Scale extends BasicView{
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
 
-        int startAngle = 180 + screenParam.MIN_ANGLE;
-        int angle = 180 - (2 * screenParam.MIN_ANGLE);
+        float startAngle = 180 + screenParam.MIN_ANGLE;
+        float angle = 180 - (2 * screenParam.MIN_ANGLE);
 
         paint.setStrokeWidth(50);
         paint.setColor(Color.LTGRAY);
         canvas.drawArc(oval, startAngle, angle, false, paint);
 
-        // Big
         paint.setColor(Color.DKGRAY);
-        int arcNum = 20;
-        int arcStart, arcLength;
-        for(int i = 0; i < (arcNum); i++) {
-            arcStart = startAngle + (angle / arcNum) * i;
+
+        // Big
+        int numOfSection = 20;
+        float arcStart, arcLength;
+        for(int i = 0; i < (numOfSection); i++) {
+            arcStart = startAngle + ((angle / numOfSection) * i);
             canvas.drawArc(oval, arcStart, (float) 0.2, false, paint);
         }
 
@@ -42,17 +43,10 @@ public class Scale extends BasicView{
         radius = screenParam.height - 37;
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
-        arcNum = 100;
-        for(int i = 0; i < (arcNum); i++) {
-            arcStart = startAngle + (angle / arcNum) * i;
+        numOfSection = 100;
+        for(int i = 0; i < (numOfSection); i++) {
+            arcStart = startAngle + ((angle / numOfSection) * i);
             canvas.drawArc(oval, arcStart, (float) 0.2, false, paint);
         }
-
-        paint.setStrokeWidth(1);
-        canvas.drawArc(oval, startAngle, angle, false, paint);
-    }
-
-    private void drawSector(Canvas canvas, int startAngle, int stopAngle){
-
     }
 }
