@@ -5,10 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-public class ScreenView extends View implements View.OnTouchListener {
+import androidx.annotation.Nullable;
+
+public class ScreenView extends View implements View.OnTouchListener{
 
     final private Context context;
     final private Debug debug = new Debug();
@@ -31,7 +34,6 @@ public class ScreenView extends View implements View.OnTouchListener {
         super(context);
         this.context = context;
         setOnTouchListener(this);
-
         Log.d("ScaleView", "w: " + String.valueOf(getWidth()));
     }
 
@@ -80,6 +82,8 @@ public class ScreenView extends View implements View.OnTouchListener {
         debug.setTime((int)(time[1] - time[0]));
     }
 
+
+
     @Override
     public boolean onTouch(View view, MotionEvent event) {
 
@@ -91,8 +95,12 @@ public class ScreenView extends View implements View.OnTouchListener {
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 // Click
-                x0 = (int)event.getX();
-                y0 = (int)event.getY();
+                x0 = (int) event.getX();
+                y0 = (int) event.getY();
+                if((x0 > (width - 200)) && (y0 > (height - 200))){
+                    sweepAngle = 270 / 2;
+                    this.invalidate();
+                }
                 break;
             case MotionEvent.ACTION_UP:
                 break;
@@ -104,22 +112,21 @@ public class ScreenView extends View implements View.OnTouchListener {
                 // Move
                 int deltaX = x - x0;
                 int deltaY = y - y0;
-                if((Math.abs(deltaY) > 100) && (x0 < width / 5)){
+                if ((Math.abs(deltaY) > 100) && (x0 < width / 5)) {
                     y0 = y;
-                    if(deltaY > 0) lineLength --;
-                    else lineLength ++;
+                    if (deltaY > 0) lineLength--;
+                    else lineLength++;
 
-                    if(lineLength < 0) lineLength = 0;
-                    if(lineLength >= GAIN_NUM) lineLength = GAIN_NUM - 1;
+                    if (lineLength < 0) lineLength = 0;
+                    if (lineLength >= GAIN_NUM) lineLength = GAIN_NUM - 1;
                     this.invalidate();
-                }
-                else if(Math.abs(deltaX) > 20){
+                } else if (Math.abs(deltaX) > 20) {
                     x0 = x;
-                    if(deltaX > 0) sweepAngle++;
+                    if (deltaX > 0) sweepAngle++;
                     else sweepAngle--;
 
-                    if(sweepAngle < 0) sweepAngle = 0;
-                    if(sweepAngle > 270) sweepAngle = 270;
+                    if (sweepAngle < 0) sweepAngle = 0;
+                    if (sweepAngle > 270) sweepAngle = 270;
                     this.invalidate();
                 }
                 break;
