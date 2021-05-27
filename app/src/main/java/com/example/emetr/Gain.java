@@ -11,8 +11,8 @@ public class Gain extends BasicView{
     private final int GAIN_NUM = 8;
     private final int SPACE_SIZE = 5;
     final int gain[] = { 1,2,4,8,16,32,64,128 };    // 8
-    int bg_width = 15;
-    int val_width = 10;
+    int bg_width = 20;
+    int val_width = 15;
 
     public void draw(Canvas canvas, int value){
 
@@ -21,7 +21,7 @@ public class Gain extends BasicView{
 
         // Value
         paint.setStrokeWidth(val_width);
-        paint.setColor(Color.GREEN);
+        paint.setColor(Color.DKGRAY);
 
         for(int i = 0; i < value; i++) {
             int y1 = screenParam.height - (i * (screenParam.height / (GAIN_NUM - 1))) - SPACE_SIZE;

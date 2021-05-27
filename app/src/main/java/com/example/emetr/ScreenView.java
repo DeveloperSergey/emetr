@@ -20,8 +20,8 @@ public class ScreenView extends View implements View.OnTouchListener {
     final private ScreenParam screenParam = new ScreenParam();
 
     private final int GAIN_NUM = 8;
-    private int x0;
-    private int y0;
+    private int x0, x1;
+    private int y0, y1;
     private int sweepAngle = 0;
     private int lineLength = 0;
 
@@ -33,21 +33,6 @@ public class ScreenView extends View implements View.OnTouchListener {
         setOnTouchListener(this);
 
         Log.d("ScaleView", "w: " + String.valueOf(getWidth()));
-
-        /*this.setOnTouchListener(new SwipeListener(context){
-            public void onSwipeTop() {
-                Toast.makeText(context, "top: " + String.valueOf(dy), Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeRight() {
-                Toast.makeText(context, "right: " + String.valueOf(dx), Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeLeft() {
-                Toast.makeText(context, "left: " + String.valueOf(dx), Toast.LENGTH_SHORT).show();
-            }
-            public void onSwipeBottom() {
-                Toast.makeText(context, "bottom: " + String.valueOf(dy), Toast.LENGTH_SHORT).show();
-            }
-        });*/
     }
 
     @Override
