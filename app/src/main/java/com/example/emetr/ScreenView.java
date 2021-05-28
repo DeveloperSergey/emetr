@@ -98,7 +98,7 @@ public class ScreenView extends View implements View.OnTouchListener{
                 x0 = (int) event.getX();
                 y0 = (int) event.getY();
                 if((x0 > (width - 200)) && (y0 > (height - 200))){
-                    sweepAngle = 270 / 2;
+                    sweepAngle = screenParam.SET_ANGLE_VALUE;
                     this.invalidate();
                 }
                 break;

@@ -16,6 +16,8 @@ public class Gain extends BasicView{
 
     public void draw(Canvas canvas, int value){
 
+        // Background
+        paint.setColor(Color.WHITE);
         paint.setStrokeWidth(bg_width);
         canvas.drawLine(bg_width/2, 0, bg_width/2, screenParam.height, paint);
 
@@ -32,13 +34,13 @@ public class Gain extends BasicView{
         }
         Log.d("ScaleView", String.valueOf(value));
 
-        // Digits
+        // Text
         paint.setStrokeWidth(1);
-        paint.setTextSize(40f);
+        paint.setTextSize(48f);
         paint.setTextAlign(Paint.Align.LEFT);
-        paint.setColor(Color.WHITE);
+        paint.setColor(Color.DKGRAY);
         final Rect textBounds = new Rect(); //don't new this up in a draw method
         paint.getTextBounds(String.valueOf(gain[value]), 0, String.valueOf(gain[value]).length(), textBounds);
-        canvas.drawText(String.valueOf(gain[value]), bg_width, screenParam.height + (textBounds.exactCenterY()), paint);
+        canvas.drawText(String.valueOf(gain[value]), bg_width + SPACE_SIZE, screenParam.height + (textBounds.exactCenterY()), paint);
     }
 }

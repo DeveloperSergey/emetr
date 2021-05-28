@@ -28,10 +28,15 @@ public class Scale extends BasicView{
         paint.setColor(Color.LTGRAY);
         canvas.drawArc(oval, startAngle, angle, false, paint);
 
-        paint.setColor(Color.DKGRAY);
+        // Set
+        paint.setStrokeWidth(100);
+        paint.setColor(Color.GREEN);
+        canvas.drawArc(oval, startAngle + (180 - screenParam.SET_ANGLE_VALUE) - 0.5f, 1.0f, false, paint);
 
         // Big
-        int numOfSection = 20;
+        paint.setStrokeWidth(50);
+        paint.setColor(Color.DKGRAY);
+        int numOfSection = screenParam.SCALE_BIG_SECTION_NUM;
         float arcStart, arcLength;
         for(int i = 0; i < (numOfSection); i++) {
             arcStart = startAngle + ((angle / numOfSection) * i);
@@ -39,11 +44,12 @@ public class Scale extends BasicView{
         }
 
         // Little
+        paint.setColor(Color.DKGRAY);
         paint.setStrokeWidth(25);
         radius = screenParam.height - 37;
         oval.set(center_x - radius, center_y - radius, center_x + radius,
                 center_y + radius);
-        numOfSection = 100;
+        numOfSection = screenParam.SCALE_SMALL_SECTION_NUM;
         for(int i = 0; i < (numOfSection); i++) {
             arcStart = startAngle + ((angle / numOfSection) * i);
             canvas.drawArc(oval, arcStart, (float) 0.2, false, paint);
