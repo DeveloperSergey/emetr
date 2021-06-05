@@ -26,7 +26,7 @@ public class Arrow extends BasicView{
         int y1 = (int)(screenParam.height * Math.sin(value * 314 / 18000.0));
 
         paint.setStyle(Paint.Style.STROKE);
-        paint.setStrokeWidth(5);
+        paint.setStrokeWidth(6);
         paint.setColor(Color.RED);
         canvas.drawLine(x0+ screenParam.width/2, screenParam.height-y0,
                 x1+ screenParam.width/2, screenParam.height-y1, paint);

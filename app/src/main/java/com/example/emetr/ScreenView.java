@@ -112,7 +112,7 @@ public class ScreenView extends View implements View.OnTouchListener{
                 // Move
                 int deltaX = x - x0;
                 int deltaY = y - y0;
-                if ((Math.abs(deltaY) > 100) && (x0 < width / 5)) {
+                if ((Math.abs(deltaY) > 200) && (x0 < width / 5)) {
                     y0 = y;
                     if (deltaY > 0) lineLength--;
                     else lineLength++;

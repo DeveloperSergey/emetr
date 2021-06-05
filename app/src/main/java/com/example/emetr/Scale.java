@@ -3,6 +3,7 @@ package com.example.emetr;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 import android.util.Log;
 
@@ -24,9 +25,14 @@ public class Scale extends BasicView{
         float startAngle = 180 + screenParam.MIN_ANGLE;
         float angle = 180 - (2 * screenParam.MIN_ANGLE);
 
+        // Background
         paint.setStrokeWidth(50);
         paint.setColor(Color.LTGRAY);
+        paint.setShadowLayer(2f, 0f, 5f, Color.DKGRAY);
         canvas.drawArc(oval, startAngle, angle, false, paint);
+        paint.reset();
+
+        paint.setStyle(Paint.Style.STROKE);
 
         // Set
         paint.setStrokeWidth(100);
@@ -54,5 +60,19 @@ public class Scale extends BasicView{
             arcStart = startAngle + ((angle / numOfSection) * i);
             canvas.drawArc(oval, arcStart, (float) 0.2, false, paint);
         }
+
+        // Text
+        radius -= 80;
+        oval.set(center_x - radius, center_y - radius, center_x + radius,
+                center_y + radius);
+        paint.setStrokeWidth(3);
+        paint.setTextSize(48f);
+        Path arc = new Path();
+        arc.addArc(oval, startAngle + 70 - 15, 50);
+        canvas.drawTextOnPath("RISE", arc, 0, 0, paint);
+
+        arc.reset();
+        arc.addArc(oval, startAngle + 70 + 5, 50);
+        canvas.drawTextOnPath("FALL", arc, 0, 0, paint);
     }
 }

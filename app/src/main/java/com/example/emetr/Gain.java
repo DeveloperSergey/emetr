@@ -13,6 +13,9 @@ public class Gain extends BasicView{
     final int gain[] = { 1,2,4,8,16,32,64,128 };    // 8
     int bg_width = 20;
     int val_width = 15;
+    final String [] colors = {
+            "#FF0000", "#ffbf00", "#ffff00", "#40ff00", "#00ffff", "#0000ff", "#bf00ff"
+    };
 
     public void draw(Canvas canvas, int value){
 
@@ -28,6 +31,7 @@ public class Gain extends BasicView{
         for(int i = 0; i < value; i++) {
             int y1 = screenParam.height - (i * (screenParam.height / (GAIN_NUM - 1))) - SPACE_SIZE;
             int y2 = screenParam.height - ((i+1) * (screenParam.height / (GAIN_NUM - 1))) + SPACE_SIZE;
+            if(i == (value - 1)) paint.setColor(Color.parseColor(colors[i]));
             canvas.drawLine(bg_width / 2, y1,
                             bg_width / 2, y2,
                             paint);
