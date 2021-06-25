@@ -10,7 +10,7 @@ public class Arrow extends BasicView{
     final int MENU_HEIGHT = 0;
     final int SHIFT_CENTER = 0;
 
-    public void draw(Canvas canvas, int value){
+    public void draw(Canvas canvas, float value){
 
         if(value < screenParam.MIN_ANGLE) value = screenParam.MIN_ANGLE;
         if(value > (180-screenParam.MIN_ANGLE)) value = (180-screenParam.MIN_ANGLE);

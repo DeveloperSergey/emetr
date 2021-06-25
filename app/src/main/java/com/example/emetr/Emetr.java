@@ -1,6 +1,14 @@
 package com.example.emetr;
 
+import android.util.Log;
+
 public class Emetr {
+
+    private final ScreenView view;
+
+    Emetr(ScreenView view){
+        this.view = view;
+    }
 
     private final int GAIN_MAX = 7;
 
@@ -13,4 +21,17 @@ public class Emetr {
     int getGain(){ return gain; }
     void incGain(){ if(gain < GAIN_MAX) gain++; }
     void decGain(){ if(gain > 0) gain--; }
+
+    void setTone(float value){
+        this.tone = value;
+        //Log.d("Emetr", "Set tone: " + String.valueOf(value));
+        view.sweepAngle = getAngle();
+        view.redraw();
+    }
+
+    float getAngle(){
+        float value = (float)(180.0 / 32768 * tone);
+        Log.d("Emetr", "value: " + String.valueOf(value));
+        return value;
+    }
 }

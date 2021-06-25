@@ -25,7 +25,7 @@ public class ScreenView extends View implements View.OnTouchListener{
     private final int GAIN_NUM = 8;
     private int x0, x1;
     private int y0, y1;
-    private int sweepAngle = 0;
+    public float sweepAngle = 0;
     private int lineLength = 0;
 
     private boolean single = true;
@@ -35,6 +35,10 @@ public class ScreenView extends View implements View.OnTouchListener{
         this.context = context;
         setOnTouchListener(this);
         Log.d("ScaleView", "w: " + String.valueOf(getWidth()));
+    }
+
+    public void redraw(){
+        this.invalidate();
     }
 
     @Override
@@ -71,7 +75,7 @@ public class ScreenView extends View implements View.OnTouchListener{
 
         // Views
         scale.draw(canvas);
-        toneArm.draw(canvas, sweepAngle);
+        toneArm.draw(canvas, (int)sweepAngle);
         gain.draw(canvas, lineLength);
         arrow.draw(canvas, sweepAngle);
         debug.draw(canvas);
@@ -81,8 +85,6 @@ public class ScreenView extends View implements View.OnTouchListener{
         Log.d("ScaleView", "Draw time [ms]: " + String.valueOf(time[1] - time[0]));
         debug.setTime((int)(time[1] - time[0]));
     }
-
-
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
