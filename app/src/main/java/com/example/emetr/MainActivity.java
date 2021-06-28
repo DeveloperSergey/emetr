@@ -11,7 +11,9 @@ import android.util.Log;
 import java.util.List;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity implements  BLESearch.BLESearchCallback, BLEConnector.BLEConnectorCallbacks{
+public class MainActivity extends AppCompatActivity implements  BLESearch.BLESearchCallback,
+        BLEConnector.BLEConnectorCallbacks,
+        ScreenView.ScreenViewCallback {
 
     BLESearch bleSearch;
     BLEConnector bleConnector;
@@ -88,11 +90,25 @@ typedef enum{
      */
 
     @Override
+    public void setToneArm(float toneArm) {
+
+        if(!bleConnector.isConnect()) return;
+        emetr.addTone(toneArm);
+        float newToneArm = emetr.getToneArm();
+        Log.d("Main", String.valueOf(newToneArm));
+
+        BluetoothGattService service = bleConnector.bleGatt.getService(UUID.fromString(svUUID));
+        BluetoothGattCharacteristic charSettings = service.getCharacteristic(UUID.fromString(svcSettingsUUID));
+        charSettings.setValue(new Settings(1, 0, 1, (int)newToneArm).getBytes());
+        bleConnector.writeChar(charSettings);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
-        ScreenView screenView = new ScreenView(getApplicationContext());
+        ScreenView screenView = new ScreenView(getApplicationContext(), this);
         setContentView(screenView);
         emetr = new Emetr(screenView);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
@@ -116,6 +132,8 @@ typedef enum{
     @Override
     public void connectedCallback(List<BluetoothGattService> services) {
 
+        emetr.setConnected(true);
+
         // Read Factory
         BluetoothGattService service = bleConnector.bleGatt.getService(UUID.fromString(svUUID));
         BluetoothGattCharacteristic charFactory = service.getCharacteristic(UUID.fromString(svcFactoryUUID));
@@ -127,7 +145,7 @@ typedef enum{
 
     @Override
     public void disconnectedCallback() {
-
+        emetr.setConnected(false);
     }
 
     @Override
@@ -146,7 +164,7 @@ typedef enum{
         if(characteristic.getUuid().toString().equals(svcResultUUID)){
 
             int value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 6);
-            //Log.d("Main", String.valueOf(value));
+            Log.d("Main", String.valueOf(value));
             emetr.setTone((float)value);
         }
 

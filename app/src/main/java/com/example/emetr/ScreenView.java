@@ -13,7 +13,12 @@ import androidx.annotation.Nullable;
 
 public class ScreenView extends View implements View.OnTouchListener{
 
+    interface ScreenViewCallback{
+        void setToneArm(float toneArm);
+    }
+
     final private Context context;
+    final private ScreenViewCallback screenViewCallback;
     final private Debug debug = new Debug();
     final private Paint mPaint = new Paint();
     final private Arrow arrow = new Arrow();
@@ -27,18 +32,24 @@ public class ScreenView extends View implements View.OnTouchListener{
     private int y0, y1;
     public float sweepAngle = 0;
     private int lineLength = 0;
+    private boolean connected = false;
 
     private boolean single = true;
 
-    public ScreenView(Context context) {
+    public ScreenView(Context context, ScreenViewCallback screenViewCallback) {
         super(context);
         this.context = context;
         setOnTouchListener(this);
         Log.d("ScaleView", "w: " + String.valueOf(getWidth()));
+        this.screenViewCallback = screenViewCallback;
     }
 
     public void redraw(){
         this.invalidate();
+    }
+    public void setConnected(boolean state){
+        this.connected = state;
+        redraw();
     }
 
     @Override
@@ -64,7 +75,10 @@ public class ScreenView extends View implements View.OnTouchListener{
 
         // Fill canvas
         mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setColor(Color.GRAY);
+        if(connected)
+            mPaint.setColor(Color.GRAY);
+        else
+            mPaint.setColor(Color.DKGRAY);
         canvas.drawPaint(mPaint);
 
         // Rectangle - Area
@@ -105,6 +119,7 @@ public class ScreenView extends View implements View.OnTouchListener{
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                screenViewCallback.setToneArm((float)(x0 - event.getX()));
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 break;

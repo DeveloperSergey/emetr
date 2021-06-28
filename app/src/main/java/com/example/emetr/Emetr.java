@@ -12,6 +12,7 @@ public class Emetr {
 
     private final int GAIN_MAX = 7;
 
+    private boolean connectedState = false;
     private int gain = 1;
     private float toneArm = 0;
     private float tone = 0;
@@ -29,9 +30,27 @@ public class Emetr {
         view.redraw();
     }
 
+    void addTone(float value){
+        toneArm += value * 50;
+        if(toneArm < 0) toneArm = 0;
+        if(toneArm > 4095) toneArm = 4095;
+    }
+
     float getAngle(){
         float value = (float)(180.0 / 32768 * tone);
         Log.d("Emetr", "value: " + String.valueOf(value));
         return value;
+    }
+
+    float getToneArm(){
+        return this.toneArm;
+    }
+
+    boolean isConnected(){
+        return connectedState;
+    }
+    void setConnected(boolean state){
+        connectedState = state;
+        view.setConnected(state);
     }
 }
