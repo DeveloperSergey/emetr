@@ -35,6 +35,7 @@ public class ScreenView extends View implements View.OnTouchListener{
     private boolean connected = false;
 
     private boolean single = true;
+    private long timeLastUpdate = 0;
 
     public ScreenView(Context context, ScreenViewCallback screenViewCallback) {
         super(context);
@@ -54,9 +55,6 @@ public class ScreenView extends View implements View.OnTouchListener{
 
     @Override
     protected void onDraw(Canvas canvas) {
-
-        long time[] = { 0, 0 };
-        time[0] = System.currentTimeMillis();
 
         super.onDraw(canvas);
         final int MARGIN = 50;
@@ -95,9 +93,10 @@ public class ScreenView extends View implements View.OnTouchListener{
         debug.draw(canvas);
 
 
-        time[1] = System.currentTimeMillis();
-        Log.d("ScaleView", "Draw time [ms]: " + String.valueOf(time[1] - time[0]));
-        debug.setTime((int)(time[1] - time[0]));
+        long time = System.currentTimeMillis();
+        Log.d("ScreenView", "Draw time [ms]: " + String.valueOf(time - timeLastUpdate));
+        debug.setTime((int)(time - timeLastUpdate));
+        timeLastUpdate = time;
     }
 
     @Override
@@ -119,7 +118,7 @@ public class ScreenView extends View implements View.OnTouchListener{
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                screenViewCallback.setToneArm((float)(x0 - event.getX()));
+                //screenViewCallback.setToneArm((float)(x0 - event.getX()));
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 break;
