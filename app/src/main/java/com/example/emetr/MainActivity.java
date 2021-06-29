@@ -92,7 +92,7 @@ typedef enum{
     @Override
     public void setToneArm(float toneArm) {
 
-        if(!bleConnector.isConnect()) return;
+        if((bleConnector == null) || !bleConnector.isConnect()) return;
         emetr.addTone(toneArm);
         float newToneArm = emetr.getToneArm();
         Log.d("Main", String.valueOf(newToneArm));
