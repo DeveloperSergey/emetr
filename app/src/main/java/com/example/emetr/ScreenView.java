@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 public class ScreenView extends View implements View.OnTouchListener{
 
     interface ScreenViewCallback{
-        void setToneArm(float toneArm);
+        void setOffset(int offset);
     }
 
     final private Context context;
@@ -27,6 +27,7 @@ public class ScreenView extends View implements View.OnTouchListener{
     final private Scale scale = new Scale();
     final private ScreenParam screenParam = new ScreenParam();
 
+    private int offset = 0;
     private final int GAIN_NUM = 8;
     private int x0, x1;
     private int y0, y1;
@@ -89,7 +90,7 @@ public class ScreenView extends View implements View.OnTouchListener{
         scale.draw(canvas);
         toneArm.draw(canvas, (int)sweepAngle);
         gain.draw(canvas, lineLength);
-        arrow.draw(canvas, sweepAngle);
+        arrow.draw(canvas, sweepAngle + offset);
         debug.draw(canvas);
 
 
@@ -113,7 +114,7 @@ public class ScreenView extends View implements View.OnTouchListener{
                 x0 = (int) event.getX();
                 y0 = (int) event.getY();
                 if((x0 > (width - 200)) && (y0 > (height - 200))){
-                    sweepAngle = screenParam.SET_ANGLE_VALUE;
+                    offset = 0;
                     this.invalidate();
                 }
                 break;
@@ -138,11 +139,12 @@ public class ScreenView extends View implements View.OnTouchListener{
                     this.invalidate();
                 } else if (Math.abs(deltaX) > 20) {
                     x0 = x;
-                    if (deltaX > 0) sweepAngle++;
-                    else sweepAngle--;
+                    if (deltaX > 0) offset++;
+                    else offset--;
 
-                    if (sweepAngle < 0) sweepAngle = 0;
-                    if (sweepAngle > 270) sweepAngle = 270;
+                    if (offset < -180) offset = -180;
+                    if (offset > 180) offset = 180;
+                    screenViewCallback.setOffset(offset);
                     this.invalidate();
                 }
                 break;

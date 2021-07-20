@@ -26,7 +26,17 @@ public class MainActivity extends AppCompatActivity implements  BLESearch.BLESea
     final String svcResultUUID = "0000fff4-0000-1000-8000-00805f9b34fb";    // Read/Notify
 
     /* Description
-    typedef struct{ // Factory
+    #ifndef BLANKET_TYPES
+#define BLANKET_TYPES
+
+#include "types.h"
+
+#define FACTORY_STRUCT_VER		1
+#define POWER_STRUCT_VER		1
+#define SETTINGS_STRUCT_VER		1
+#define RESULT_STRUCT_VER		1
+
+typedef struct{ // Factory
 	u16 struct_ver;
 	u16 hardware_ver;
 	u16 scheme_ver;
@@ -72,26 +82,27 @@ typedef struct{ // Result
 	u16 dac1;
 	u16 dac2;
 	i16 adc_code;
-	u16 resistance;
-	u16 tone_arm;
-	u16 tone;
-	u16 gain;
 	u16 res1;
-	u16 res2;
+	u16 tone_arm;
+	i16 voltage;
+	u16 gain;
+	u32 resistance;
 } t_result;
 
 
 
 typedef enum{
+	CMD_SETTINGS,
 	CMD_GO_TO_SET,
-	CMD_SETTINGS
 } e_commands;
+
+#endif // BLANKET_TYPES
 
      */
 
     @Override
-    public void setToneArm(float toneArm) {
-
+    public void setOffset(int value) {
+        /*
         if((bleConnector == null) || !bleConnector.isConnect()) return;
         emetr.addTone(toneArm);
         float newToneArm = emetr.getToneArm();
@@ -100,7 +111,7 @@ typedef enum{
         BluetoothGattService service = bleConnector.bleGatt.getService(UUID.fromString(svUUID));
         BluetoothGattCharacteristic charSettings = service.getCharacteristic(UUID.fromString(svcSettingsUUID));
         charSettings.setValue(new Settings(1, 0, 1, (int)newToneArm).getBytes());
-        bleConnector.writeChar(charSettings);
+        bleConnector.writeChar(charSettings);*/
     }
 
     @Override
@@ -163,7 +174,7 @@ typedef enum{
 
         if(characteristic.getUuid().toString().equals(svcResultUUID)){
 
-            int value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT16, 6);
+            int value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT16, 6);
             Log.d("Main", String.valueOf(value));
             emetr.setTone((float)value);
         }

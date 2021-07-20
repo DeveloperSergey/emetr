@@ -37,7 +37,7 @@ public class Emetr {
     }
 
     float getAngle(){
-        float value = (float)(180.0 / 32768 * tone);
+        float value = (float)180.0 - (float)(180.0 / 65536 * (32768 + tone));
         Log.d("Emetr", "value: " + String.valueOf(value));
         return value;
     }
