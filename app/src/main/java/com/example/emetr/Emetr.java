@@ -26,7 +26,7 @@ public class Emetr {
     void setTone(float value){
         this.tone = value;
         //Log.d("Emetr", "Set tone: " + String.valueOf(value));
-        view.sweepAngle = getAngle();
+        view.angle = getAngle();
         view.redraw();
     }
 

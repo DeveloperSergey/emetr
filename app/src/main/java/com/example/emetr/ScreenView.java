@@ -5,11 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-
-import androidx.annotation.Nullable;
 
 public class ScreenView extends View implements View.OnTouchListener{
 
@@ -27,12 +24,12 @@ public class ScreenView extends View implements View.OnTouchListener{
     final private Scale scale = new Scale();
     final private ScreenParam screenParam = new ScreenParam();
 
-    private int offset = 0;
+    private int angleOffset = 0;
     private final int GAIN_NUM = 8;
-    private int x0, x1;
-    private int y0, y1;
-    public float sweepAngle = 0;
-    private int lineLength = 0;
+    private int x;
+    private int y;
+    public float angle = 0;
+    private int gainLinLength = 0;
     private boolean connected = false;
 
     private boolean single = true;
@@ -49,6 +46,7 @@ public class ScreenView extends View implements View.OnTouchListener{
     public void redraw(){
         this.invalidate();
     }
+
     public void setConnected(boolean state){
         this.connected = state;
         redraw();
@@ -74,13 +72,11 @@ public class ScreenView extends View implements View.OnTouchListener{
 
         // Fill canvas
         mPaint.setStyle(Paint.Style.FILL);
-        if(connected)
-            mPaint.setColor(Color.GRAY);
-        else
-            mPaint.setColor(Color.DKGRAY);
+        if(connected) mPaint.setColor(Color.GRAY);
+        else mPaint.setColor(Color.DKGRAY);
         canvas.drawPaint(mPaint);
 
-        // Rectangle - Area
+        // Area
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(5);
         mPaint.setColor(Color.GREEN);
@@ -88,12 +84,12 @@ public class ScreenView extends View implements View.OnTouchListener{
 
         // Views
         scale.draw(canvas);
-        toneArm.draw(canvas, (int)sweepAngle);
-        gain.draw(canvas, lineLength);
-        arrow.draw(canvas, sweepAngle + offset);
+        toneArm.draw(canvas, (int) angle);
+        gain.draw(canvas, gainLinLength);
+        arrow.draw(canvas, angle + angleOffset);
         debug.draw(canvas);
 
-
+        // FPS
         long time = System.currentTimeMillis();
         Log.d("ScreenView", "Draw time [ms]: " + String.valueOf(time - timeLastUpdate));
         debug.setTime((int)(time - timeLastUpdate));
@@ -111,15 +107,14 @@ public class ScreenView extends View implements View.OnTouchListener{
         switch (event.getAction() & MotionEvent.ACTION_MASK) {
             case MotionEvent.ACTION_DOWN:
                 // Click
-                x0 = (int) event.getX();
-                y0 = (int) event.getY();
-                if((x0 > (width - 200)) && (y0 > (height - 200))){
-                    offset = 0;
+                this.x = (int) event.getX();
+                this.y = (int) event.getY();
+                if((this.x > (width - 200)) && (this.y > (height - 200))){
+                    angleOffset = (int) (screenParam.SET_ANGLE_VALUE - angle);
                     this.invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
-                //screenViewCallback.setToneArm((float)(x0 - event.getX()));
                 break;
             case MotionEvent.ACTION_POINTER_DOWN:
                 break;
@@ -127,24 +122,23 @@ public class ScreenView extends View implements View.OnTouchListener{
                 break;
             case MotionEvent.ACTION_MOVE:
                 // Move
-                int deltaX = x - x0;
-                int deltaY = y - y0;
-                if ((Math.abs(deltaY) > 200) && (x0 < width / 5)) {
-                    y0 = y;
-                    if (deltaY > 0) lineLength--;
-                    else lineLength++;
+                int deltaX = x - this.x;
+                int deltaY = y - this.y;
+                if ((Math.abs(deltaY) > 200) && (this.x < width / 5)) {
+                    this.y = y;
+                    if (deltaY > 0) gainLinLength--;
+                    else gainLinLength++;
 
-                    if (lineLength < 0) lineLength = 0;
-                    if (lineLength >= GAIN_NUM) lineLength = GAIN_NUM - 1;
+                    if (gainLinLength < 0) gainLinLength = 0;
+                    if (gainLinLength >= GAIN_NUM) gainLinLength = GAIN_NUM - 1;
                     this.invalidate();
                 } else if (Math.abs(deltaX) > 20) {
-                    x0 = x;
-                    if (deltaX > 0) offset++;
-                    else offset--;
+                    this.x = x;
+                    if (deltaX > 0) angleOffset++;
+                    else angleOffset--;
 
-                    if (offset < -180) offset = -180;
-                    if (offset > 180) offset = 180;
-                    screenViewCallback.setOffset(offset);
+                    if (angleOffset < -180) angleOffset = -180;
+                    if (angleOffset > 180) angleOffset = 180;
                     this.invalidate();
                 }
                 break;

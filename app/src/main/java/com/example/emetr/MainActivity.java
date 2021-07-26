@@ -12,8 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity implements  BLESearch.BLESearchCallback,
-        BLEConnector.BLEConnectorCallbacks,
-        ScreenView.ScreenViewCallback {
+        BLEConnector.BLEConnectorCallbacks{
 
     BLESearch bleSearch;
     BLEConnector bleConnector;
@@ -25,11 +24,7 @@ public class MainActivity extends AppCompatActivity implements  BLESearch.BLESea
     final String svcSettingsUUID = "0000fff3-0000-1000-8000-00805f9b34fb";  // Read/Write
     final String svcResultUUID = "0000fff4-0000-1000-8000-00805f9b34fb";    // Read/Notify
 
-    /* Description
-    #ifndef BLANKET_TYPES
-#define BLANKET_TYPES
-
-#include "types.h"
+/* Description
 
 #define FACTORY_STRUCT_VER		1
 #define POWER_STRUCT_VER		1
@@ -89,48 +84,32 @@ typedef struct{ // Result
 	u32 resistance;
 } t_result;
 
-
-
 typedef enum{
 	CMD_SETTINGS,
 	CMD_GO_TO_SET,
 } e_commands;
+*/
 
-#endif // BLANKET_TYPES
-
-     */
-
-    @Override
-    public void setOffset(int value) {
-        /*
-        if((bleConnector == null) || !bleConnector.isConnect()) return;
-        emetr.addTone(toneArm);
-        float newToneArm = emetr.getToneArm();
-        Log.d("Main", String.valueOf(newToneArm));
-
-        BluetoothGattService service = bleConnector.bleGatt.getService(UUID.fromString(svUUID));
-        BluetoothGattCharacteristic charSettings = service.getCharacteristic(UUID.fromString(svcSettingsUUID));
-        charSettings.setValue(new Settings(1, 0, 1, (int)newToneArm).getBytes());
-        bleConnector.writeChar(charSettings);*/
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
 
-        ScreenView screenView = new ScreenView(getApplicationContext(), this);
-        setContentView(screenView);
-        emetr = new Emetr(screenView);
+        // View
+        ScreenView screenView = new ScreenView(getApplicationContext(), null);
+        setContentView(screenView); //setContentView(R.layout.activity_main);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         getSupportActionBar().hide();
-        Log.d("emetr_activity", "App started.");
+
+        // Model
+        emetr = new Emetr(screenView);
 
         // Bluetooth
         bleSearch = new BLESearch(this, this);
         bleSearch.startScan();
     }
 
+    /* ------------------------------------------ BLE ------------------------------------------ */
     @Override
     public void bleDeviceFound(BluetoothDevice device) {
         if( (bleConnector == null) && (device.getName().indexOf("Emetr") != -1) ) {
@@ -185,4 +164,5 @@ typedef enum{
     public void operationFailed(BLEConnector.OPERATIONS operation) {
 
     }
+    /* ----------------------------------------------------------------------------------------- */
 }
