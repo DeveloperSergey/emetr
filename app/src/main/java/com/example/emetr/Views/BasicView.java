@@ -1,6 +1,8 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Paint;
+
+import com.example.emetr.Views.ScreenParam;
 
 public class BasicView {
 

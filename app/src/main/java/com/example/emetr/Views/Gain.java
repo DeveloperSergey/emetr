@@ -1,4 +1,4 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.Log;
 
-public class Gain extends BasicView{
+import com.example.emetr.Views.BasicView;
+
+public class Gain extends BasicView {
 
     private final int GAIN_NUM = 8;
     private final int SPACE_SIZE = 5;

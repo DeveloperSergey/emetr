@@ -1,13 +1,15 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 
+import com.example.emetr.Views.BasicView;
+
 import java.util.ArrayList;
 
-public class Debug extends BasicView{
+public class Debug extends BasicView {
 
     private ArrayList<Integer> times = new ArrayList<>();
     private int time = 0;

@@ -1,0 +1,64 @@
+BLE Description
+
+#define FACTORY_STRUCT_VER		1
+#define POWER_STRUCT_VER		1
+#define SETTINGS_STRUCT_VER		1
+#define RESULT_STRUCT_VER		1
+
+typedef struct{ // Factory
+	u16 struct_ver;
+	u16 hardware_ver;
+	u16 scheme_ver;
+	u16 firmware_ver;
+	u16 res1;
+	u16 res2;
+	u16 res3;
+	u16 res4;
+	u16 res5;
+	u16 res6;
+} t_factory;
+
+typedef struct{ // Power
+	u16 struct_ver;
+	u16 vbus;
+	u16 vbat;
+	u16 v3_3;
+	u16 chrg_state;
+	u16 btn_state;
+	struct{
+		u16 percect;
+		u16 is_charging;
+		u16 discharged;
+	}battery;
+	u16 res1;
+} t_power;
+
+typedef struct{ // Settings
+	u16 struct_ver;
+	u16 cmd;
+	u16 gain;
+	u16 tone_arm;
+	u16 res1;
+	u16 res2;
+	u16 res3;
+	u16 res4;
+	u16 res5;
+	u16 res6;
+} t_settings;
+
+typedef struct{ // Result
+	u16 struct_ver;
+	u16 dac1;
+	u16 dac2;
+	i16 adc_code;
+	u16 res1;
+	u16 tone_arm;
+	i16 voltage;
+	u16 gain;
+	u32 resistance;
+} t_result;
+
+typedef enum{
+	CMD_SETTINGS,
+	CMD_GO_TO_SET,
+} e_commands;

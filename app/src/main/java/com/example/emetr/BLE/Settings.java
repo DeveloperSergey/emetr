@@ -1,4 +1,4 @@
-package com.example.emetr;
+package com.example.emetr.BLE;
 
 public class Settings {
 

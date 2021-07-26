@@ -1,4 +1,4 @@
-package com.example.emetr;
+package com.example.emetr.BLE;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;

@@ -2,6 +2,9 @@ package com.example.emetr;
 
 import android.util.Log;
 
+import com.example.emetr.BLE.Factory;
+import com.example.emetr.Views.ScreenView;
+
 public class Emetr {
 
     private final ScreenView view;
@@ -12,45 +15,45 @@ public class Emetr {
 
     private final int GAIN_MAX = 7;
 
-    private boolean connectedState = false;
+    private boolean connectionState = false;
     private int gain = 1;
     private float toneArm = 0;
-    private float tone = 0;
-    private boolean autoSet = false;
+    private float toneValue = 0;
+
+    Factory factory;
+
+    void setFactory(Factory factory){
+        this.factory = factory;
+        view.showFactory(this.factory);
+    }
 
     void setGain(int value){ if((value >= 0) && (value < GAIN_MAX)) gain = value; }
     int getGain(){ return gain; }
-    void incGain(){ if(gain < GAIN_MAX) gain++; }
-    void decGain(){ if(gain > 0) gain--; }
 
-    void setTone(float value){
-        this.tone = value;
-        //Log.d("Emetr", "Set tone: " + String.valueOf(value));
+    void setToneValue(float value){
+        this.toneValue = value;
         view.angle = getAngle();
         view.redraw();
     }
 
-    void addTone(float value){
-        toneArm += value * 50;
-        if(toneArm < 0) toneArm = 0;
-        if(toneArm > 4095) toneArm = 4095;
+    void setToneArm(float value){
+        this.toneArm = value;
     }
-
-    float getAngle(){
-        float value = (float)180.0 - (float)(180.0 / 65536 * (32768 + tone));
-        Log.d("Emetr", "value: " + String.valueOf(value));
-        return value;
-    }
-
     float getToneArm(){
         return this.toneArm;
     }
 
-    boolean isConnected(){
-        return connectedState;
-    }
-    void setConnected(boolean state){
-        connectedState = state;
+    void setConnection(boolean state){
+        connectionState = state;
         view.setConnected(state);
+    }
+    boolean getConnection(){
+        return connectionState;
+    }
+
+    float getAngle(){
+        float value = (float)180.0 - (float)(180.0 / 65536 * (32768 + toneValue));
+        Log.d("Emetr", "value: " + String.valueOf(value));
+        return value;
     }
 }

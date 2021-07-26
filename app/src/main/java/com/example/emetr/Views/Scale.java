@@ -1,13 +1,14 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
-import android.util.Log;
 
-public class Scale extends BasicView{
+import com.example.emetr.Views.BasicView;
+
+public class Scale extends BasicView {
 
     public void draw(Canvas canvas){
 

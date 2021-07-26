@@ -1,4 +1,4 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,6 +7,9 @@ import android.graphics.Paint;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
+import com.example.emetr.BLE.Factory;
 
 public class ScreenView extends View implements View.OnTouchListener{
 
@@ -50,6 +53,11 @@ public class ScreenView extends View implements View.OnTouchListener{
     public void setConnected(boolean state){
         this.connected = state;
         redraw();
+    }
+
+    public void showFactory(Factory factory){
+        String str = "HW: " + String.valueOf(factory.HARDWARE) + " SH: " + String.valueOf(factory.SCHEME) + " FW: " + String.valueOf(factory.FIRMWARE);
+        Toast.makeText(context, str, Toast.LENGTH_LONG).show();
     }
 
     @Override

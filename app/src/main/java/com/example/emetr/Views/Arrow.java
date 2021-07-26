@@ -1,11 +1,11 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
 
-public class Arrow extends BasicView{
+public class Arrow extends BasicView {
 
     final int MENU_HEIGHT = 0;
     final int SHIFT_CENTER = 0;

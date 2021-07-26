@@ -1,4 +1,4 @@
-package com.example.emetr;
+package com.example.emetr.Views;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -6,7 +6,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-public class ToneArm extends BasicView{
+import com.example.emetr.Views.BasicView;
+
+public class ToneArm extends BasicView {
 
     public void draw(Canvas canvas, int value){
         final RectF oval = new RectF();
