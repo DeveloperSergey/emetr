@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothGattService;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.emetr.BLE.BLEConnector;
 import com.example.emetr.BLE.BLESearch;
@@ -84,9 +85,11 @@ public class MainActivity extends AppCompatActivity implements  BLESearch.BLESea
 
     @Override
     public void readCharCallback(BluetoothGattCharacteristic characteristic) {
-        if(characteristic.getUuid().toString().equals(svcSettingsUUID)) {
+        if(characteristic.getUuid().toString().equals(svcFactoryUUID)) {
             try {
-                emetr.setFactory(new Factory(characteristic.getValue()));
+                Factory factory = new Factory(characteristic.getValue());
+                emetr.setFactory(factory);
+                showFactory(factory);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -99,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements  BLESearch.BLESea
         if(characteristic.getUuid().toString().equals(svcResultUUID)){
 
             int value = characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_SINT16, 6);
-            Log.d("Main", String.valueOf(value));
             emetr.setToneValue((float)value);
         }
 
@@ -110,4 +112,14 @@ public class MainActivity extends AppCompatActivity implements  BLESearch.BLESea
 
     }
     /* ----------------------------------------------------------------------------------------- */
+
+    private void showFactory(Factory factory){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String str = "HW: " + String.valueOf(factory.HARDWARE) + " SH: " + String.valueOf(factory.SCHEME) + " FW: " + String.valueOf(factory.FIRMWARE);
+                Toast.makeText(getApplicationContext(), str, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 }

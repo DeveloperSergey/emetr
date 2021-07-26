@@ -55,11 +55,6 @@ public class ScreenView extends View implements View.OnTouchListener{
         redraw();
     }
 
-    public void showFactory(Factory factory){
-        String str = "HW: " + String.valueOf(factory.HARDWARE) + " SH: " + String.valueOf(factory.SCHEME) + " FW: " + String.valueOf(factory.FIRMWARE);
-        Toast.makeText(context, str, Toast.LENGTH_LONG).show();
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
 

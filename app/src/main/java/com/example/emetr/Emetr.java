@@ -24,7 +24,6 @@ public class Emetr {
 
     void setFactory(Factory factory){
         this.factory = factory;
-        view.showFactory(this.factory);
     }
 
     void setGain(int value){ if((value >= 0) && (value < GAIN_MAX)) gain = value; }
